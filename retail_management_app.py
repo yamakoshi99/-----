@@ -2,6 +2,7 @@
 # v1.0
 import sys
 import csv
+import logging
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QHBoxLayout, QLabel, QLineEdit, QPushButton,
                              QTextEdit, QFileDialog, QMessageBox, QListWidget,
@@ -9,9 +10,13 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
 from PyQt5.QtCore import Qt
 from gs1_utils import calculate_check_digit
 
+# ログの基本設定
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
 class FunctionSelectionDialog(QDialog):  # 機能選択ダイアログ
     def __init__(self, parent=None):
         super().__init__(parent)
+        logging.debug('FunctionSelectionDialog が初期化されました')
         self.setWindowTitle("機能選択")
         layout = QVBoxLayout()
         self.list_widget = QListWidget()
@@ -35,6 +40,7 @@ class FunctionSelectionDialog(QDialog):  # 機能選択ダイアログ
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        logging.debug('MainWindow が初期化されました')
         self.setWindowTitle("GS1 Check Digit Calculator")
         self.selected_function = None  # 選択された機能を格納
         self.initUI()
@@ -111,6 +117,7 @@ class MainWindow(QMainWindow):
         return widget
 
     def show_function_selection_dialog(self):
+        logging.debug('機能選択ダイアログを表示しています')
         self.dialog = FunctionSelectionDialog(self)
         if self.dialog.exec_() == self.dialog.Accepted:
             self.selected_function = self.dialog.get_selected_function()
@@ -174,6 +181,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "エラー", str(e))
 
 if __name__ == '__main__':
+    logging.info('アプリケーションが開始されました')
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
